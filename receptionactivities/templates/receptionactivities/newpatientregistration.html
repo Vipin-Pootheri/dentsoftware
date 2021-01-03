@@ -1,0 +1,101 @@
+{% extends 'homepage/base.html'%}
+{% block content%}
+{% include 'receptionactivities/receptionnavbar.html' %}
+<!--Modal for check in walkin user -->
+{% include 'receptionactivities/walkincheckin.html'%}
+<!--Modal for check in walkin user  ends here-->
+<!--modal for confirmation for checking after registration-->
+{% include 'receptionactivities/checkinconfirmation.html' %}
+   <div class="container-fluid mt-4 px-5">
+        <form method="POST">
+            <input hidden id ='csrf_token' value={{ csrf_token }}>
+        <div class="row mb-3">
+            <div class="col-md-5">
+
+                {{form.salutation}}
+            </div>
+            <div class="col-md-5 ml-auto">
+                {{form.addressline1}}
+            </div>
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-5">
+                {{form.firstname}}
+            </div>
+            <div class="col-md-5 ml-auto">
+                {{form.addressline2}}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-5">
+                {{form.middlename}}
+            </div>
+            <div class="col-md-5 ml-auto">
+                {{form.addressline3}}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-5">
+                {{form.lastname}}
+            </div>
+            <div class="col-md-5 ml-auto">
+                {{form.location}}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-5">
+                Date Of Birth:  {{form.dob}}
+            </div>
+            <div class="col-md-5 ml-auto">
+                {{form.city}}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6 " >
+               <div class="form-check form-check-inline">
+                   <input class="form-check-input" type="radio" id="male" name="gender"  value="Male"  tabindex="6">
+                   <label class="form-check-label" for="male"> Male</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="gender" id ="female" value="Female" tabindex="7">
+                  <label class="form-check-label" for="female" >Female</label>
+                </div>
+            </div>
+            <div class="col-md-5 ml-auto">
+               <select class = "form-control" name="country" id="country" tabindex="15">
+                   {% for country in countries %}
+                        <option value={{country.id}}>{{country.name}}</option>
+                   {% endfor %}
+               </select>
+            </div>
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-5">
+                {{form.phonenumber}}
+            </div>
+            <div class="col-md-5 ml-auto">
+               <select class = "form-control" name="state" id="state" tabindex="16">
+
+               </select>
+            </div>
+
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-5">
+                {{form.email}}
+            </div>
+            <div class="col-md-5 ml-auto">
+                {{form.postcode}}
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center" style="text-align: center;">
+
+            <input type="button" class="btn btn-secondary col-md-3 mr-4 mt-3" id="patientsubmit" name="patientsubmit" value="Submit"></input>
+
+            <button type="reset" class="btn btn-secondary col-md-3 mt-3" id="patientreset" name="patientreset">Reset</button>
+        </div>
+    </form>
+   </div>
+{% endblock %}

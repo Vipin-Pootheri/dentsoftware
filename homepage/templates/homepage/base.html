@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Dent Software</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha256-DOS9W6NR+NFe1fUhEE0PGKY/fubbUCnOfTje2JMDw3Y=" crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'homepage/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'receptionactivities/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'doctoractivities/css/base.css' %}">
+    <link rel="stylesheet" href="https://unpkg.com/fullcalendar@3.10.1/dist/fullcalendar.min.css">
+
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light " style="background-color:#7386D5;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Dent Software</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <ul class="navbar-nav col-md-2 mr-auto">
+            <span class="mr-2" style="color:white">Welcome: {{user.username}}</span>
+            <a href = "{% url 'logout' %}">  <span style="color:white"><i class="fas fa-1x fa-power-off"></i></span></a>
+        </ul>
+
+    </nav>
+
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header" id="searchdiv">
+                <input class="form-control " type="search" placeholder="search patient" id="searchpatient" aria-label="Search">
+                {% block patientsearch %}
+                {% endblock %}
+            </div>
+            <div id="searchprofile">
+
+            </div>
+            {% if 'firstname' in request.session %}
+            <div id="appendprofile1" class="contact-box center-version">
+                <div class="card border-dark  ml-2" style="width: 230px; height:150px" id="userprofile">
+                     <div name="userprofcard" class="card-body text-dark" id = {{request.session.patid}}>
+                        <h5 name="userprofcard" class="card-title">{{request.session.firstname}}</h5>
+                        <h6 name="userprofcard" class="card-subtitle text-muted">{{request.session.phonenumber}}</h6>
+                        <p  name="userprofcard"  class="card-text">{{request.session.location}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+
+            <ul class="list-unstyled components" id="userprofilediv">
+                 {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == 'receptionist' %}
+                    <li>
+                        <a id="sidepanelcheckin">Check in</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a id ="checkinerror">Check In</a>
+                    </li>
+                {% endif %}
+                    <li>
+                        <a href="#">Insurance</a>
+                    </li>
+                {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == 'doctor' %}
+                    <li>
+                        <a id ="sidepanelalerts" href="{% url 'alerts' %}" >Alert</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a id ="sidepanelalertsdisabled"  >Alert</a>
+                    </li>
+                {% endif %}
+                {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == 'doctor' %}
+                    <li>
+                        <a id ="radiology" href="{% url 'radiologyimages' %}">Images/Radiology</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a id ="radiologydiasbled" >Images/Radiology</a>
+                    <li>
+                {% endif %}
+                {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == 'doctor' %}
+                    <li>
+                        <a href="{% url 'dentalchart' %}">Dental Chart</a>
+                    </li>
+                 {% else %}
+                    <li>
+                        <a id="dentalchartdisabled">Dental Chart</a>
+                    </li>
+                 {% endif %}
+                {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == 'doctor' %}
+                    <li>
+                        <a href="{% url 'prescription' %}">Prescription</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a id="prescriptiondiasbled">Prescription</a>
+                    </li>
+                {% endif %}
+                {% if request.user.groups.all.0.name == "admin" or request.user.groups.all.0.name == 'doctor' %}
+                    <li>
+                        <a href="{% url 'checkout' %}">Check Out</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a id="checkoutdisabled">Check Out</a>
+                    </li>
+                {% endif %}
+
+                    <li>
+                        <a href="{% url 'billing' %}">Billing</a>
+                    </li>
+
+<!--                <li >-->
+<!--                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>-->
+<!--                    <ul class="collapse list-unstyled" id="homeSubmenu">-->
+<!--                        <li>-->
+<!--                            <a href="#">Home 1</a>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a href="#">Home 2</a>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a href="#">Home 3</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </li>-->
+
+<!--                <li>-->
+<!--                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>-->
+<!--                    <ul class="collapse list-unstyled" id="pageSubmenu">-->
+<!--                        <li>-->
+<!--                            <a href="#">Page 1</a>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a href="#">Page 2</a>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <a href="#">Page 3</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </li>-->
+
+            </ul>
+
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.js"  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/f34458237b.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+        });
+    </script>
+
+    <script src="https://unpkg.com/moment@2.24.0/min/moment.min.js"></script>
+    <script src="https://unpkg.com/fullcalendar@3.10.1/dist/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="https://res.cloudinary.com/dxfq3iotg/raw/upload/v1567487539/jquery.tabledit.js"></script>
+    <script src="{% static 'adminactivities/js/base.js' %}"></script>
+    <script src="{% static 'receptionactivities/js/base.js' %}"></script>
+    <script src="{% static 'homepage/js/base.js' %}"></script>
+    <script src="{% static 'doctoractivities/js/base.js' %}"></script>
+    {% block footer %}
+    {% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+{% extends 'homepage/base.html' %}
+
+{% block content %}
+
+
+
+<!--Modal for check in walkin user -->
+{% include 'receptionactivities/walkincheckin.html'%}
+<!--Modal for check in walkin user  ends here-->
+
+<form method="post" id="prescriptionform">
+    {% csrf_token %}
+    <div class="row mb-3">
+        <label for="prescriptiongenericname" class="form-label col-md-2">Generic Name </label>
+        <select class="form-select col-md-3" id="prescriptiongenericname" name ="prescriptiongenericname">
+            <option value="1">Antibiotics</option>
+            <option value="2">Ointment</option>
+            <option value="3">Generic</option>
+        </select>
+        <label for="prescriptionmedicine" class="form-label col-md-2">Generic Name </label>
+        <select class="form-select col-md-3" id="prescriptionmedicine" name ="prescriptionmedicine">
+            {% for medicine in medicines %}
+            <option value={{medicine.id}}>{{medicine.medicine}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="row mb-3">
+        <label for="prescriptionpattern" class="form-label col-md-2">pattern </label>
+        <select class="form-select col-md-3" id="prescriptionpattern" name ="prescriptionpattern">
+            <option value="1">1-0-1</option>
+            <option value="2">1-1-1</option>
+            <option value="3">0-0-1</option>
+        </select>
+        <label for="prescriptiondays" class="form-label col-md-2">Days </label>
+            <input type="text" class="form-control col-md-3" id="prescriptiondays" name="prescriptiondays">
+    </div>
+    <div class="row mb-3">
+        <label class="form-label col-md-2">Instructions </label>
+         <textarea class="form-control col-md-4" id="prescriptioninstruction"  name ="prescriptioninstruction" style="height: 100px"></textarea>
+
+    </div>
+    <div class="row d-flex justify-content-center">
+        <button type="submit" class="btn btn-primary col-md-3 mr-4 " id="saveprescription" name="saveprescription">Submit</button>
+        <button type="submit" class="btn btn-primary col-md-3 mr-4 " id="cancelprescription" name="resetprescription">Reset</button>
+    </div>
+</form>
+<!--Prescription table-->
+<button class="btn btn-secondary" id="addprescription">Add Prescription </button>
+<table id = "prescriptiontable" class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">Created Date</th>
+      <th scope="col">Medicine </th>
+      <th scope="col">Pattern</th>
+      <th scope="col">Created By</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for prescription in prescriptions %}
+    <tr id = {{prescription.id}}>
+      <td>{{prescription.created_at}}</td>
+      <td>{{prescription.medicine__medicine}}</td>
+      <td>{{prescription.pattern}} for {{prescription.days}} days
+      </td>
+      <td>{{prescription.doctor__username}}</td>
+      <td>
+          <button name="editprescription"><i class="fa fa-edit" aria-hidden="true"></i></button>
+          <button name="deleteprescription"><i class="fa fa-trash" aria-hidden="true"></i></button>
+
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock%}

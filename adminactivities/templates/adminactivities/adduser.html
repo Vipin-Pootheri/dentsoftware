@@ -1,0 +1,43 @@
+{% extends 'homepage/base.html'%}
+{% block content %}
+{% include 'homepage/adminnavbar.html' %}
+
+<div class="container-fluid">
+    <button id = "newuser" class="btn btn-secondary mt-3">New User</button>
+</div>
+<div id = "adduserform" class = "container-fluid mt-3 col-lg-6 float-left">
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button class="btn btn-secondary type" type="submit" style = "width:49%">Create</button>
+        <button id = "canceluser" class="btn btn-secondary type" type="reset" style = "width:49%"> Cancel</button>
+    </form>
+</div>
+
+<div class="contauner-fluid mt-2 col-md-10">
+    <table id="usertable" class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">User type</th>
+      <th scope="col">Username</th>
+      <th scope="col">Email</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in userlist %}
+    <tr id ={{user.id}}>
+      <td>{{user.groups__name}}</td>
+      <td>{{user.username}}</td>
+      <td>{{user.email}}</td>
+      <td>
+          <a name = "edituser"><i class="fas fa-2x fa-edit mr-2"></i></a>
+          <a href="{% url 'deleteuser' user.id %}"><i class="fas fa-2x fa-trash-alt"></i></a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{%endblock%}

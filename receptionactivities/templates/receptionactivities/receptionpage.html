@@ -1,0 +1,15 @@
+{% extends 'homepage/base.html' %}
+
+{% block content %}
+{% if request.user.groups.all.0.name == 'receptionist' %}
+    {% include 'receptionactivities/receptionnavbar.html'%}
+    <!--Modal for check in walkin user -->
+    {% include 'receptionactivities/walkincheckin.html'%}
+    <!--Modal for check in walkin user  ends here-->
+{% else %}
+    {% include 'receptionactivities/doctornavbar.html'%}
+{% endif %}
+
+
+
+{% endblock%}

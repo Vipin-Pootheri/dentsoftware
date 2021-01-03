@@ -1,0 +1,65 @@
+.teeth-wrap {
+    display: inline-block;
+    border-radius: 5px;
+}
+.aq1 {
+    color: black;
+}
+
+.teethholder_main {
+    min-height: 80px;
+
+    border-bottom: thick solid rgba(0, 0, 0, 0);
+}
+.flag_holder.upper {
+    top: -8px;
+}
+<style>
+.flag_holder {
+    width: 20px;
+    height: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+
+<style>
+.teethholder_sub {
+    min-height: 40px;
+    width: 43.5px;
+    text-align: center;
+}
+.crown2 {
+    // width: 40px;
+    // height: 40px;
+    position: relative;
+    width: 100%;
+    max-height: 80%;
+    margin-top: 5px;
+    margin-bottom: auto;
+    top: -12px;
+}
+
+.zoom {
+  padding: 50px;
+  background-color: green;
+  transition: transform .2s; /* Animation */
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.zoom:hover {
+  transform: scale(1.5); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+
+ .tabledit-input:disabled {
+     display: none
+ }
+.wizard>.actions a {
+     background-color: #4099ff;
+     border-color: #4099ff;
+     color: #fff;
+     cursor: pointer;
+     -webkit-transition: all ease-in 0.3s;
+     transition: all ease-in 0.3s
+ }

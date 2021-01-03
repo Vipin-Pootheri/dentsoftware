@@ -1,0 +1,208 @@
+{% extends 'homepage/base.html' %}
+
+{% block content %}
+
+
+
+<!--Modal for check in walkin user -->
+{% include 'receptionactivities/walkincheckin.html'%}
+<!--Modal for check in walkin user  ends here-->
+
+
+<form method="post">
+    {% csrf_token %}
+
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4 ">
+            {% if alert.bloodpressure %}
+            <input class="form-check-input" type="checkbox" name="alertbloodpreessure" id="alertbloodpreessure" checked>
+            <label class="form-check-label ml-1 " for="alertbloodpreessure">Blood Pressure</label>
+            <input class="form-control" type="text" name="alertbloodpreessuretext" id="alertbloodpreessuretext" value= {{alert.bloodpressuretext|default_if_none:""}}>
+            {% else %}
+            <input class="form-check-input" type="checkbox" name="alertbloodpreessure" id="alertbloodpreessure">
+            <label class="form-check-label ml-1 " for="alertbloodpreessure">Blood Pressure</label>
+            <input class="form-control" type="text" name="alertbloodpreessuretext" id="alertbloodpreessuretext" disabled="disabled" value= {{alert.bloodpressuretext|default_if_none:""}}>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+            {% if alert.heartalignment %}
+            <input class="form-check-input" type="checkbox" name="alertheartalignment" id="alertheartalignment" checked>
+             <label class="form-check-label ml-1 " for="alertheartalignment">Heart Alignment</label>
+            <input class="form-control" type="text" name="alertheartalignmenttext" id="alertheartalignmenttext" value= {{alert.heartalignmenttext|default_if_none:""}}>
+
+            {% else %}
+            <input class="form-check-input" type="checkbox" name="alertheartalignment" id="alertheartalignment" >
+             <label class="form-check-label ml-1 " for="alertheartalignment">Heart Alignment</label>
+            <input class="form-control" type="text" name="alertheartalignmenttext" id="alertheartalignmenttext" disabled="disabled" value= {{alert.heartalignmenttext|default_if_none:""}}>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+            {% if alert.heumaticfever %}
+            <input class="form-check-input" type="checkbox" name="alertheumaticfever" id="alertheumaticfever" checked>
+            <label class="form-check-label ml-1 " for="alertheumaticfever">Rheumatic fever</label>
+            <input class="form-control" type="text" name="alertheumaticfevertext" id="alertheumaticfevertext" value= {{alert.heumaticfevertext|default_if_none:""}}>
+
+            {% else %}
+            <input class="form-check-input" type="checkbox" name="alertheumaticfever" id="alertheumaticfever" >
+            <label class="form-check-label ml-1 " for="alertheumaticfever">Rheumatic fever</label>
+            <input class="form-control" type="text" name="alertheumaticfevertext" id="alertheumaticfevertext" disabled="disabled" value= {{alert.heumaticfevertext|default_if_none:""}}>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+            {% if alert.asthma %}
+            <input class="form-check-input" type="checkbox" name="alertasthma" id="alertasthma" >
+            <label class="form-check-label ml-1 " for="alertasthma">Astma, chest or breathing problem</label>
+            <input class="form-control" type="text" name="alertasthmatext" id="alertasthmatext" value= {{alert.asthmatext|default_if_none:""}}>
+
+            {% else %}
+            <input class="form-check-input" type="checkbox" name="alertasthma" id="alertasthma" >
+            <label class="form-check-label ml-1 " for="alertasthma">Astma, chest or breathing problem</label>
+            <input class="form-control" type="text" name="alertasthmatext" id="alertasthmatext"  disabled="disabled" value= {{alert.asthmatext|default_if_none:""}}>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+            {% if alert.tuberculosis %}
+            <input class="form-check-input" type="checkbox" name="alerttuberculosis" id="alerttuberculosis" checked>
+            <label class="form-check-label ml-1 " for="alerttuberculosis">Tuberculosis</label>
+            <input class="form-control" type="text" name="alerttuberculosistext" id="alerttuberculosistext" value= {{alert.tuberculosistext|default_if_none:""}}>
+
+             {% else %}
+             <input class="form-check-input" type="checkbox" name="alerttuberculosis" id="alerttuberculosis" >
+            <label class="form-check-label ml-1 " for="alerttuberculosis">Tuberculosis</label>
+            <input class="form-control" type="text" name="alerttuberculosistext" id="alerttuberculosistext" disabled="disabled" value= {{alert.tuberculosistext|default_if_none:""}}>
+
+             {% endif %}
+        </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+             {% if alert.heart %}
+            <input class="form-check-input" type="checkbox" name="alertheart" id="alertheart" checked>
+            <label class="form-check-label ml-1 " for="alertheart">Do you have an artificial hip/heart valve /prosthetic implant?</label>
+            <input class="form-control" type="text" name="alerthearttext" id="alerthearttext" value= {{alert.hearttext|default_if_none:""}}>
+
+             {% else %}
+            <input class="form-check-input" type="checkbox" name="alertheart" id="alertheart" >
+            <label class="form-check-label ml-1 " for="alertheart">Do you have an artificial hip/heart valve /prosthetic implant?</label>
+            <input class="form-control" type="text" name="alerthearttext" id="alerthearttext" disabled="disabled" value= {{alert.hearttext|default_if_none:""}}>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+            {% if alert.dentalissues %}
+            <input class="form-check-input" type="checkbox" name="alertdentalissues" id="alertdentalissues" checked >
+            <label class="form-check-label ml-1 " for="alertdentalissues">Have you ever had problem with dental treatments?</label>
+            <input class="form-control" type="text" name="alertdentalissuestext" id="alertdentalissuestext" value= {{alert.dentalissuestext|default_if_none:""}}>
+
+            {% else %}
+            <input class="form-check-input" type="checkbox" name="alertdentalissues" id="alertdentalissues" >
+            <label class="form-check-label ml-1 " for="alertdentalissues">Have you ever had problem with dental treatments?</label>
+            <input class="form-control" type="text" name="alertdentalissuestext" id="alertdentalissuestext" disabled="disabled" value= {{alert.dentalissuestext|default_if_none:""}}>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+              {% if alert.previousillness %}
+            <input class="form-check-input" type="checkbox" name="alertpreviousillness" id="alertpreviousillness" checked>
+            <label class="form-check-label ml-1 " for="alertpreviousillness">List any other previous illness</label>
+            <input class="form-control" type="text" name="alertpreviousillnesstext" id="alertpreviousillnesstext" value= {{alert.previousillnesstext|default_if_none:""}}>
+
+            {% else %}
+            <input class="form-check-input" type="checkbox" name="alertpreviousillness" id="alertpreviousillness" >
+            <label class="form-check-label ml-1 " for="alertpreviousillness">List any other previous illness</label>
+            <input class="form-control" type="text" name="alertpreviousillnesstext" id="alertpreviousillnesstext" disabled="disabled" value= {{alert.previousillnesstext|default_if_none:""}}>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+            {% if alert.presentmedicalcare %}
+            <input class="form-check-input" type="checkbox" name="alertpresentmedicalcare" id="alertpresentmedicalcare" checked>
+            <label class="form-check-label ml-1 " for="alertpresentmedicalcare">Are you presently under medical care</label>
+            <input class="form-control" type="text" name="alertpresentmedicalcaretext" id="alertpresentmedicalcaretext" value= {{alert.presentmedicalcaretext|default_if_none:""}}>
+
+            {% else %}
+            <input class="form-check-input" type="checkbox" name="alertpresentmedicalcare" id="alertpresentmedicalcare" >
+            <label class="form-check-label ml-1 " for="alertpresentmedicalcare">Are you presently under medical care</label>
+            <input class="form-control" type="text" name="alertpresentmedicalcaretext" id="alertpresentmedicalcaretext" disabled="disabled" value= {{alert.presentmedicalcaretext|default_if_none:""}}>
+
+            {% endif %}
+        </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+            {% if alert.anydrugs %}
+            <input class="form-check-input" type="checkbox" name="alertanydrugs" id="alertanydrugs" checked>
+            <label class="form-check-label ml-1 " for="alertanydrugs">Are you taking any drugs / medicines / Tablets?</label>
+            <input class="form-control" type="text" name="alertanydrugstext" id="alertanydrugstext" value= {{alert.anydrugstext|default_if_none:""}}>
+
+             {% else %}
+            <input class="form-check-input" type="checkbox" name="alertanydrugs" id="alertanydrugs" >
+            <label class="form-check-label ml-1 " for="alertanydrugs">Are you taking any drugs / medicines / Tablets?</label>
+            <input class="form-control" type="text" name="alertanydrugstext" id="alertanydrugstext" disabled="disabled" value= {{alert.anydrugstext|default_if_none:""}}>
+
+            {% endif %}
+             </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+            {% if alert.femalepatients %}
+            <input class="form-check-input" type="checkbox" name="alertfemalepatients" id="alertfemalepatients" checked>
+            <label class="form-check-label ml-1 " for="alertfemalepatients">Female Patients, Are you pregnant / Feeding?</label>
+            <input class="form-control" type="text" name="alertfemalepatientstext" id="alertfemalepatientstext" value= {{alert.femalepatientstext|default_if_none:""}}>
+
+             {% else %}
+            <input class="form-check-input" type="checkbox" name="alertfemalepatients" id="alertfemalepatients" >
+            <label class="form-check-label ml-1 " for="alertfemalepatients">Female Patients, Are you pregnant / Feeding?</label>
+            <input class="form-control" type="text" name="alertfemalepatientstext" id="alertfemalepatientstext" disabled="disabled" value= {{alert.femalepatientstext|default_if_none:""}}>
+
+            {% endif %}
+            </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check col-md-4">
+            {% if alert.alertallergies %}
+            <input class="form-check-input" type="checkbox" name="alertallergies" id="alertallergies" checked>
+            <label class="form-check-label ml-1 " for="alertallergies">Do yo have allergies?</label>
+            <input class="form-control" type="text" name="alertallergiestext" id="alertallergiestext" value= {{alert.alertallergiestext|default_if_none:""}}>
+
+             {% else %}
+            <input class="form-check-input" type="checkbox" name="alertallergies" id="alertallergies" >
+            <label class="form-check-label ml-1 " for="alertallergies">Do yo have allergies?</label>
+            <input class="form-control" type="text" name="alertallergiestext" id="alertallergiestext" disabled="disabled" value= {{alert.alertallergiestext|default_if_none:""}}>
+
+             {% endif %}
+            </div>
+    </div>
+    <div class="row ml-2 mb-3">
+        <div class="form-check ">
+            <label class="form-check-label ml-1 " for="alertremarks">Remarks </label>
+             <textarea class="form-control " style="height: 100px;width:500px" name ="alertremarks" id="alertremarks" value= {{alert.remarks|default_if_none:""}}> </textarea>
+
+        </div>
+    </div>
+
+    <div class="row mb-3 d-flex justify-content-center" style="text-align: center;">
+        <button type="submit" class="btn btn-primary col-md-3 mr-4 " id="alertsubmit" name="alertsubmit">Submit</button>
+        <button type="reset" class="btn btn-primary col-md-3" id="alertreset" name="alertreset">Reset</button>
+    </div>
+</form>
+
+{% endblock%}

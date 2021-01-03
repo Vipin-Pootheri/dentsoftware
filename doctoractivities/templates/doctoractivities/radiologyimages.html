@@ -1,0 +1,77 @@
+{% extends 'homepage/base.html' %}
+
+{% block content %}
+
+
+
+<!--Modal for check in walkin user -->
+{% include 'receptionactivities/walkincheckin.html'%}
+<!--Modal for check in walkin user  ends here-->
+
+
+<form method="post" id = "radiologyform" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="radilogycategory" class="form-label "> Type :  </label>
+        <select class="form-control col-md-2" id="radilogycategorytype" name ="radilogycategorytype">
+            <option value="request">Request</option>
+            <option value="response">Response</option>
+        </select>
+    <div class="row mb-3 mt-3  justify-content-center" >
+        <label for="radilogycategory" class="form-label ">Document Type :  </label>
+        <select class="form-control col-md-2" id="radilogycategory" name ="radilogycategory">
+            <option value="xray">X Rays</option>
+            <option value="treatment">Treatment</option>
+            <option value="report">Reports</option>
+            <option value="personal">Personal</option>
+        </select>
+        &nbsp&nbsp&nbsp&nbsp
+        <label for="radilogytoothno" class="form-label ">Tooth No : </label>
+        <input type="number" class="form-control col-md-2" id="radilogytoothno" name="radilogytoothno">
+    </div>
+
+    <div class="row mb-3 justify-content-center" >
+        <label for ="radiologyinstruction" class="form-label ">Instructions </label>
+         <textarea class="form-control col-md-6" id="radiologyinstruction" name="radiologyinstruction" style="height: 100px"></textarea>
+
+    </div>
+    <div class="row mb-4 justify-content-center">
+        <label for ="radilogyuploadfile" class="form-label ">Choose file </label>
+         <input type="file" class="form-control col-md-6" id="radilogyuploadfile" name="radilogyuploadfile">
+    </div>
+    <div class="row d-flex justify-content-center">
+        <button type="submit" class="btn btn-secondary col-md-3 mr-4 " id="saveradilogy" name="saveradilogy">Submit</button>
+        <button type="reset" class="btn btn-secondary col-md-3 mr-4 " id="cancelradilogy" name="cancelradilogy">Reset</button>
+    </div>
+</form>
+
+<!--Radilogy table -->
+<button class="btn btn-secondary" id="addradiology">Add Image </button>
+<table id = "radilogytable" class="table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">Request Type</th>
+      <th scope="col">Document Type</th>
+      <th scope="col">Tooth No</th>
+      <th scope="col">Created By</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for radiology in radiologyimages %}
+    <tr id = {{radiology.id}}>
+      <td>{{radiology.requesttype}}</td>
+      <td>{{radiology.documenttype}}</td>
+      <td>{{radiology.toothno}}</td>
+      <td>{{radiology.doctor__username}}</td>
+      <td>
+          <button name="editradiology"><i class="fa fa-edit" aria-hidden="true"></i></button>
+          <button name="downloadradiology"><i class="fa fa-download" aria-hidden="true"></i></button>
+          <button name="deleteradiology"><i class="fa fa-trash" aria-hidden="true"></i></button>
+
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock%}

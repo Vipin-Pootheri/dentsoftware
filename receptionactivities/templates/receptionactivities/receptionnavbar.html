@@ -1,0 +1,18 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+    <div class="collapse navbar-collapse" id="SupportedContent">
+        <ul class="navbar-nav">
+            <a href="{% url 'newpatient' %}"><button class="btn  mr-1" style="width:200 px;height: 40px">New Patient</button></a>
+            <a href="{% url 'appointment' %}"> <button class="btn mr-1" style="width:200 px;height: 40px ">Appointment</button></a>
+        </ul>
+    </div>
+    <div class="mr-2">
+        <span class="counter-count">{{checkin}}</span>
+        <br>
+        <span class="ml-3 mt-0" style="color:white ;font-size:10px">CheckIn</span>
+    </div>
+    <div>
+        <span class="counter-count">{{appointment}} </span>
+        <br>
+        <span class="ml-2" style="color:white;font-size:10px">Appointment</span>
+    </div>
+</nav>

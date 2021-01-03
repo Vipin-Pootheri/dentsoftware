@@ -1,0 +1,267 @@
+{% extends 'homepage/base.html'%}
+{% block content%}
+{% include 'receptionactivities/receptionnavbar.html' %}
+<!--Modal for check in walkin user -->
+{% include 'receptionactivities/walkincheckin.html'%}
+
+
+
+
+<div id="calendar" class="mt-3">
+
+</div>
+
+<!--Modal for check in walkin user -->
+{% include 'receptionactivities/walkincheckin.html'%}
+<!--Modal for check in walkin user  ends here-->
+
+
+<!--Modal for creating a appointment-->
+<div class="modal fade" id="modalnewappointment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <form method="POST" autocomplete="off" list="autocompleteOff">
+         {% csrf_token %}
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Create Appointment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+          <div class="form-group">
+              <div class="form-check col-md-12 ml-3">
+                   <input type="checkbox" class="form-check-input" id="newpatientappointment" name ='newpatientappointmentcheckbox' value="1">
+                   <label class="form-check-label"  for="newpatientappointment" >Tick here for new patient</label>
+              </div>
+              <div class='col-md-12'>
+                   <label class="control-label ">Name </label>
+                   <div>
+                       <input  id="addappointmentpatientid" hidden = "true" name="addappointmentpatientid">
+                       <input id='addappointmentpatientname'name='addappointmentpatientname' type='text' class="form-control" placeholder="Name"   />
+                   </div>
+                  <div id="addappointmentsearchdiv">
+                        <div id="addappointmentsearchdivelements">
+
+                   </div>
+                   </div>
+              </div>
+              <div class='col-md-12' id = "addappointmentpatientphonediv">
+                   <label class="control-label ">Phone Number </label>
+                   <div>
+                       <input id='addappointmentpatientphone'type='text' name ='addappointmentpatientphone' class="form-control" placeholder="Phone Number"/>
+                   </div>
+              </div>
+<!--             <div class="form-group">-->
+<!--                  <label class="control-label">Appointment Time</label>-->
+<!--                  <div class='input-group date' id='datetimepicker1'>-->
+<!--                     <input type='text' class="form-control" />-->
+<!--                     <span class="input-group-addon">-->
+<!--                     <span class="glyphicon glyphicon-calendar"></span>-->
+<!--                     </span>-->
+<!--                  </div>-->
+<!--               </div>-->
+              <div class='col-md-12'>
+                   <div class="form-group">
+                      <label class="control-label">Appointment Time</label>
+                      <div class='col-md-12 row input-group date'>
+                         <input class="col-md-6 mr-3 form-control" type='text' name='addappointmentstartdate'  id='addappointmentstartdate' placeholder="start time" />
+                         <input class="col-md-6 mr-3 form-control" type='text' name='addappointmentenddate'  id='addappointmentenddate'  placeholder="end time"/>
+
+                      </div>
+                   </div>
+              </div>
+          <div class='col-md-12'>
+              <label class="control-label">Doctor Name </label>
+              <div>
+                  <select name ='addappointmentdoctor' id='addappointmentdoctor'type='text' class="form-control" >
+                      {% for doctor in doctors %}
+                      <option value="{{doctor.id}}" >{{doctor.username}}</option>
+                      {% endfor %}
+
+                  </select>
+              </div>
+          </div>
+      </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add Appointment</button>
+      </div>
+     </form>
+    </div>
+  </div>
+</div>
+<!--Model for creating new appointment ends here-->
+
+<!--Modal for updating the appointmnet/ go to checkin /delete/register for appointed patients-->
+<div class="modal fade" id="modalupdateappointment" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+     <form method="POST" autocomplete="off">
+         {% csrf_token %}
+        <div class="modal-header border-0 mb-0 mt-0">
+
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
+      <div class="modal-body">
+<!--         bootstrap card here -->
+          <div class="card border-0" style="width: 30rem;">
+              <div class="card-body">
+                  <h4  hidden id = "updateappointmentid"  name ="updateappointmentid" class="card-title"></h4>
+                  <h5 id = "updateappointmenttitle" class="card-title"></h5>
+                  <span id = "updateappointmentaddressline1" class="card-text"></span><span>,</span>
+                  <span id = "updateappointmentlocation" class="card-text"></span><span>,</span>
+                  <span id = "updateappointmentcity" class="card-text"></span>
+              </div>
+              <div class='col-md-12'>
+                   <div class="form-group">
+                      <label class="control-label">Appointment Time</label>
+                      <div class='col-md-12 row'>
+                         <input class="col-md-5 mr-3 form-control" type='text' name='updateappointmentstartdate'  id='updateappointmentstartdate' placeholder="Date" />
+                         <input class="col-md-5 mr-3 form-control" type='text' name='updateappointmentenddate' id='updateappointmentenddate' placeholder="Start Time" />
+                      </div>
+                   </div>
+              </div>
+              <div class='col-md-12'>
+                    <label class="control-label">Doctor Name </label>
+                        <div>
+                  <select name ='addappointmentdoctor' id='updateappointmentdoctor'type='text' class="form-control" >
+                      {% for doctor in doctors %}
+                      <option value="{{doctor.id}}" >{{doctor.username}}</option>
+                      {% endfor %}
+
+                  </select>
+                </div>
+                </div>
+
+              </div>
+
+
+      </div>
+
+     </form>
+        <div class="card-body">
+                    <button  id="checkin" class="card-link"></button>
+                    <button  id="deleteappointment" class="card-link">Delete</button>
+                    <button  id="updateappointment" class="card-link">Update</button>
+                  </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal for updating the appointmnet/ go to checkin /delete/register for appointed patients ends here -->
+
+
+{% endblock %}
+
+{% block footer %}
+<script>
+
+
+    $(document).ready(function(){
+    $('#calendar').fullCalendar({
+        dayHeaders:true,
+        weekends: true ,
+        editable: true ,
+        initialView: 'dayGridMonth',
+        eventResizableFromStart: true ,
+        eventDurationEditable: true,
+
+        height: 600,
+        header: {
+            left: 'prev,today,next',
+            center:'title',
+            right: 'month,agendaWeek,agendaDay'
+        },
+        events: [
+                    {% for event in eventdata %}
+                        {
+                            title: "{{ event.title__firstname}}"+ " " +  "{{ event.title__lastname}}",
+                            start: '{{ event.start|date:"Y-m-d H:i" }}',
+                            end: '{{ event.end|date:"Y-m-d H:i" }}',
+                            id: '{{ event.eventid }}',
+                            extendedProps: {
+                                'doctor': '{{event.doctor__username}}',
+                                'phonenumber':'{{event.title__phonenumber}}',
+                                'addressline1':'{{event.title__addressline1}}',
+                                'location':'{{event.title__location}}',
+                                'city':'{{event.title__city}}'
+                                }
+                        },
+                    {% endfor %}
+                ],
+        dayClick: function(date,jsEvent,view) {
+
+            $('#modalnewappointment').modal('show')
+
+
+            if ( view.name =='month' ){
+                $('#addappointmentstartdate').val(date.format('YYYY-MM-DD 12:00'))
+                $('#addappointmentenddate').val(date.format('YYYY-MM-DD 12:30'))
+            }
+            else{
+                $('#addappointmentstartdate').val(date.format('YYYY-MM-DD HH:mm'))
+                $('#addappointmentenddate').val(date.format('YYYY-MM-DD HH:mm'))
+            }
+
+
+        },
+        eventDrop: function(event, delta, revertFunc, jsEvent, ui, view) {
+            $.ajax({
+                url: 'draganddrop',
+                data: {
+                    'eventid': event.id,
+                    'eventstart':event.start.format('YYYY-MM-DD HH:mm:SS'),
+                    'eventend':event.end.format('YYYY-MM-DD HH:mm:SS')
+                    },
+                success: function (data) {}
+           })
+
+        },
+        eventResize: function(event, delta, revertFunc, jsEvent, ui, view) {
+            $.ajax({
+                url: 'draganddrop',
+                data: {
+                    'eventid': event.id,
+                    'eventstart':event.start.format('YYYY-MM-DD HH:mm:SS'),
+                    'eventend':event.end.format('YYYY-MM-DD HH:mm:SS')
+                    },
+                success: function (data) {}
+           })
+
+        },
+        eventClick:function(calEvent, jsEvent, view){
+
+
+            $('#updateappointmentid').val(calEvent.id)
+            $('#updateappointmentstartdate').val(calEvent.start.format('YYYY-MM-DD HH:mm'))
+            $('#updateappointmentenddate').val(calEvent.end.format('YYYY-MM-DD HH:mm'))
+            $('#updateappointmenttitle').text(calEvent.title)
+            $('#updateappointmentaddressline1').text(calEvent.extendedProps['addressline1'])
+            $('#updateappointmentlocation').text(calEvent.extendedProps['location'])
+            $('#updateappointmentcity').text(calEvent.extendedProps['city'])
+            if (calEvent.id.indexOf('E') == 0){
+                $('#checkin').text('Check In')
+
+            }else{
+                $('#checkin').text('Register')
+            }
+
+            $('#modalupdateappointment').modal('show')
+        }
+
+
+    });
+
+
+});
+</script>
+{% endblock %}

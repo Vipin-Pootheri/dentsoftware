@@ -54,15 +54,7 @@
                        <input id='addappointmentpatientphone'type='text' name ='addappointmentpatientphone' class="form-control" placeholder="Phone Number"/>
                    </div>
               </div>
-<!--             <div class="form-group">-->
-<!--                  <label class="control-label">Appointment Time</label>-->
-<!--                  <div class='input-group date' id='datetimepicker1'>-->
-<!--                     <input type='text' class="form-control" />-->
-<!--                     <span class="input-group-addon">-->
-<!--                     <span class="glyphicon glyphicon-calendar"></span>-->
-<!--                     </span>-->
-<!--                  </div>-->
-<!--               </div>-->
+
               <div class='col-md-12'>
                    <div class="form-group">
                       <label class="control-label">Appointment Time</label>
@@ -209,6 +201,7 @@
             }
             else{
                 $('#addappointmentstartdate').val(date.format('YYYY-MM-DD HH:mm'))
+                console.log(date)
                 $('#addappointmentenddate').val(date.format('YYYY-MM-DD HH:mm'))
             }
 

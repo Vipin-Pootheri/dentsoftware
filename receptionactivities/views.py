@@ -142,9 +142,14 @@ def checkin(request):
     patid = request.GET.get('id')
     print(patid[2:])
     p = ExistingPatientAppointmentevents.objects.filter(id=patid[2:]).values('title_id','doctor_id').get()
-
-    q=CheckedinPatient(title_id = p['title_id'],doctor_id=p['doctor_id'])
-    q.save()
+    ischeckedin = CheckedinPatient.objects.filter(title_id = p['title_id'],doctor_id=p['doctor_id'],status=None)
+    print(ischeckedin)
+    if ischeckedin.exists():
+        print('here')
+        pass
+    else:
+        q=CheckedinPatient(title_id = p['title_id'],doctor_id=p['doctor_id'])
+        q.save()
     data={'status':'true'}
     return JsonResponse(data)
 

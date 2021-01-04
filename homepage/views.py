@@ -48,8 +48,13 @@ def searchpatient(request):
 def checkinwalkin(request):
     patid = request.session['patid']
     doctorid = request.GET.get('doctorid')
-    q = CheckedinPatient(title_id=patid, doctor_id=doctorid)
-    q.save()
+    ischeckedin = CheckedinPatient.objects.filter(title_id=patid, doctor_id=doctorid, status=None)
+    print(ischeckedin)
+    if ischeckedin.exists():
+        pass
+    else:
+        q = CheckedinPatient(title_id=patid, doctor_id=doctorid)
+        q.save()
     data = {'status': 'true'}
     return JsonResponse(data)
 

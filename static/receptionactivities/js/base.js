@@ -40,9 +40,14 @@ $(document).ready(function(){
             $('div[name="addapointmnetsearchname"]').remove()
             $.each(data,function(index,value){
 
-                element = $('<div class="form-control" name="addapointmnetsearchname" id = ' + value['id'] +'>' + '<span>' + value['firstname'] + '</span><span>'+ ' '+ value['lastname'] +  '</span><span style="float: right">Ph: '+ value['phonenumber'] + '</span> </div>').on("click",function(){
-                    $('#addappointmentpatientname').val($(this).text())
+                element = $('<div class="form-control" name="addapointmnetsearchname" id = '
+                + value['id'] +'>' + '<span>' + value['firstname'] + '</span><span>'+ ' '+ value['lastname']
+                +  '</span><span style="float: right">Ph: '+ value['phonenumber']
+                + '</span> </div>').on("click",function(){
+                    var name=$(this).text().split('Ph:')
+                    $('#addappointmentpatientname').val(name[0])
                     $('#addappointmentpatientid').val($(this).attr('id'))
+                    $('div[name="addapointmnetsearchname"]').remove()
 
                 })
                 $('#addappointmentsearchdiv').append(element)
@@ -99,7 +104,7 @@ $(document).ready(function(){
         },
         success: function (data) {
         $('#modalupdateappointment').modal('hide')
-             location.reload(true)
+             window.location = window.location.href;
         }
         })
     })
@@ -271,7 +276,7 @@ function csrfSafeMethod(method) {
             if(data['status'] == 'true'){
             alert("User checked in sucessfully")
              $('#modalcheckin').modal('hide')
-             location.reload('/')
+            window.location = window.location.href;
 
             }
             else{

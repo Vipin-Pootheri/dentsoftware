@@ -30,23 +30,23 @@ $(document).ready(function(){
 
 //search for patient name in creating new appointment
     $('#addappointmentpatientname').keyup(function(){
-        $.ajax({
-        url: '/home/searchpatient',
-        data: {
-          'name': $('#addappointmentpatientname').val()
-        },
-        success: function (data) {
+        if ($('#newpatientappointment').prop('checked')==false){
+            $.ajax({
+                url: '/home/searchpatient',
+                data: {
+                  'name': $('#addappointmentpatientname').val()
+                },
+            success: function (data) {
+                $('div[name="addapointmnetsearchname"]').remove()
+                $.each(data,function(index,value){
 
-            $('div[name="addapointmnetsearchname"]').remove()
-            $.each(data,function(index,value){
-
-                element = $('<div class="form-control" name="addapointmnetsearchname" id = '
-                + value['id'] +'>' + '<span>' + value['firstname'] + '</span><span>'+ ' '+ value['lastname']
-                +  '</span><span style="float: right">Ph: '+ value['phonenumber']
-                + '</span> </div>').on("click",function(){
-                    var name=$(this).text().split('Ph:')
-                    $('#addappointmentpatientname').val(name[0])
-                    $('#addappointmentpatientid').val($(this).attr('id'))
+                    element = $('<div class="form-control" name="addapointmnetsearchname" id = '
+                    + value['id'] +'>' + '<span>' + value['firstname'] + '</span><span>'+ ' '+ value['lastname']
+                    +  '</span><span style="float: right">Ph: '+ value['phonenumber']
+                    + '</span> </div>').on("click",function(){
+                        var name=$(this).text().split('Ph:')
+                        $('#addappointmentpatientname').val(name[0])
+                        $('#addappointmentpatientid').val($(this).attr('id'))
                     $('div[name="addapointmnetsearchname"]').remove()
 
                 })
@@ -54,6 +54,8 @@ $(document).ready(function(){
             })
             }
         })
+        }
+
     })
 
 //update the appointment to checkin
@@ -67,7 +69,10 @@ $(document).ready(function(){
           'id': $('#updateappointmentid').val()
         },
         success: function (data) {
+
             window.location.href=data['url']+'/reception/newpatient/'
+            $('#firstname').val(data['title'])
+            $('#phonenumber').val(data['phonenumber'])
         }
         })
 
@@ -81,7 +86,7 @@ $(document).ready(function(){
             if(data['status'] == 'true'){
             alert("User checked in sucessfully")
              $('#modalupdateappointment').modal('hide')
-             location.reload()
+             window.location = window.location.href
 
             }
             else{
@@ -237,10 +242,11 @@ function csrfSafeMethod(method) {
 
 
     $('#confirmcheckin').on('click',function(){
+
         $.ajax({
          url: '/home/setpatient/',
          data: {
-            patid:   $('#regno').val()
+            patid: $('#regno').text()
             },
          success: function (data) {
               $('#modalconfirmcheckin').modal('hide');
@@ -285,6 +291,15 @@ function csrfSafeMethod(method) {
             }
         })
 
+    })
+
+    $('#billing').on("click",function(){
+        if ($('div[name="userprofcard"]').length){
+             alert('bill page')
+        }
+        else{
+            alert('plese select a patiemt to check in')
+        }
     })
 
 })

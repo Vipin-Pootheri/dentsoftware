@@ -109,6 +109,10 @@ $(document).ready(function(){
      $('#checkoutdisabled').on("click",function(){
             alert('You are not authorised to perform this action')
     })
+    $('#dentalchartdisabled').on("click",function(){
+            alert('You are not authorised to perform this action')
+    })
+
 
 //for radiology
     $('#radiologyform').hide()

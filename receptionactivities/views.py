@@ -73,6 +73,7 @@ def getstate(request):
     except Exception as e:
         data = {'status': 'false', 'errmsg': str(e)}
     return JsonResponse(data)
+
 def appointment(request):
     if request.method == 'POST':
         newpatientappointmentcheckbox = request.POST.get('newpatientappointmentcheckbox')
@@ -97,7 +98,8 @@ def appointment(request):
                 title=Patient.objects.get(id=addappointmentpatientid),
                 start=addappointmentstartdate,
                 end=addappointmentenddate,
-                doctor_id=doctorname
+                doctor_id=doctorname,
+                ischeckedin=False
             )
             p.save()
     existing_patientevents = ExistingPatientAppointmentevents.objects.all() \
@@ -141,15 +143,19 @@ def draganddrop(request):
 def checkin(request):
     patid = request.GET.get('id')
     print(patid[2:])
-    p = ExistingPatientAppointmentevents.objects.filter(id=patid[2:]).values('title_id','doctor_id').get()
-    ischeckedin = CheckedinPatient.objects.filter(title_id = p['title_id'],doctor_id=p['doctor_id'],status=None)
-    print(ischeckedin)
+    p = ExistingPatientAppointmentevents.objects.filter(id=patid[2:])
+    if p.exists():
+        p.update(ischeckedin=True)
+    ischeckedin = CheckedinPatient.objects.filter(title_id = p.values('title_id','doctor_id').get()['title_id'],doctor_id=p.values('title_id','doctor_id').get()['doctor_id'],status=None)
+    print(p)
     if ischeckedin.exists():
-        print('here')
+
         pass
     else:
-        q=CheckedinPatient(title_id = p['title_id'],doctor_id=p['doctor_id'])
+        q=CheckedinPatient(title_id = p.values('title_id','doctor_id').get()['title_id'],doctor_id=p.values('title_id','doctor_id').get()['doctor_id'])
         q.save()
+
+
     data={'status':'true'}
     return JsonResponse(data)
 
@@ -188,9 +194,10 @@ def update(request):
 
 def registerafterappointment(request):
     eventid = request.GET.get('id')
-    p = NewPatientAppointmentevents.objects.filter(id=eventid[2:]).values('title','phonenumber')
+    p = NewPatientAppointmentevents.objects.filter(id=eventid[2:]).values('title','phonenumber').get()
 
-    data ={'url':request.scheme + "://" +request.get_host() }
+    data ={'url':request.scheme + "://" +request.get_host(), 'title':p['title'],'phonenumber':p['phonenumber'],"eventid":eventid }
+    print(data)
     return JsonResponse(data)
 
 

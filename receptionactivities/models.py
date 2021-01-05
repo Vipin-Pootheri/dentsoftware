@@ -27,7 +27,7 @@ class ExistingPatientAppointmentevents(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     doctor = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
-
+    ischeckedin = models.BooleanField(null=True)
 
     def schedule_reminder(self):
         """Schedule a Dramatiq task to send a reminder for this appointment"""
@@ -75,7 +75,8 @@ class NewPatientAppointmentevents(models.Model):
     start = models.DateTimeField()
     end = models.DateTimeField()
     doctor = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
-
+    ischeckedin = models.BooleanField(null=True)
+    isregistered = models.BooleanField(null=True)
 
 
 class CheckedinPatient(models.Model):

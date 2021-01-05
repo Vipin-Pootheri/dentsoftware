@@ -109,9 +109,9 @@
               <div class="card-body">
                   <h4  hidden id = "updateappointmentid"  name ="updateappointmentid" class="card-title"></h4>
                   <h5 id = "updateappointmenttitle" class="card-title"></h5>
-                  <span id = "updateappointmentaddressline1" class="card-text"></span><span>,</span>
-                  <span id = "updateappointmentlocation" class="card-text"></span><span>,</span>
-                  <span id = "updateappointmentcity" class="card-text"></span>
+                  <span id = "updateappointmentaddressline1" class="card-text"></span>
+                  <span id = "updateappointmentlocation" class="card-text"></span>
+                  <span id = "updatephonenumber" class="card-text"></span>
               </div>
               <div class='col-md-12'>
                    <div class="form-group">
@@ -215,7 +215,9 @@
                     'eventstart':event.start.format('YYYY-MM-DD HH:mm:SS'),
                     'eventend':event.end.format('YYYY-MM-DD HH:mm:SS')
                     },
-                success: function (data) {}
+                success: function (data) {
+                location.reload()
+                }
            })
 
         },
@@ -238,9 +240,13 @@
             $('#updateappointmentstartdate').val(calEvent.start.format('YYYY-MM-DD HH:mm'))
             $('#updateappointmentenddate').val(calEvent.end.format('YYYY-MM-DD HH:mm'))
             $('#updateappointmenttitle').text(calEvent.title)
-            $('#updateappointmentaddressline1').text(calEvent.extendedProps['addressline1'])
-            $('#updateappointmentlocation').text(calEvent.extendedProps['location'])
-            $('#updateappointmentcity').text(calEvent.extendedProps['city'])
+             if (calEvent.id.indexOf('E') == 0){
+                $('#updateappointmentaddressline1').text(calEvent.extendedProps['addressline1'] + ',')
+                $('#updateappointmentlocation').text(calEvent.extendedProps['location'] + ',')
+                $('#updatephonenumber').text(calEvent.extendedProps['phonenumber'])
+             } else{
+                 $('#updatephonenumber').text(calEvent.extendedProps['phonenumber'])
+             }
             if (calEvent.id.indexOf('E') == 0){
                 $('#checkin').text('Check In')
 

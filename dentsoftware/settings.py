@@ -81,6 +81,20 @@ WSGI_APPLICATION = 'dentsoftware.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'sql_server.pyodbc',
+#         'NAME': os.environ['DBNAME'],
+#         'USER': os.environ['DBUSER'],
+#         'PASSWORD': os.environ['DBPASS'],
+#         'HOST': os.environ['DBHOST'],
+#         'PORT': '',
+#
+#         'OPTIONS': {
+#             'driver': 'ODBC Driver 17 for SQL Server',
+#         },
+#     },
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'sql_server.pyodbc',
@@ -95,7 +109,6 @@ DATABASES = {
         },
     },
 }
-
 
 
 # Password validation
@@ -141,6 +154,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

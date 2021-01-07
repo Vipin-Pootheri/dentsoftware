@@ -2,17 +2,22 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.models import User, Group
 from django.db.models.functions import Concat
-from django.db.models import Value, CharField
+from django.db.models import Value, CharField,F,ExpressionWrapper,DateTimeField,DurationField
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date
-import datetime
+from datetime import date,datetime
 from .forms import NewPatient
 from .models import Patient, ExistingPatientAppointmentevents, NewPatientAppointmentevents,CheckedinPatient,CountryList,StateList
 
 
 # Create your views here.
 def newpatient(request):
-    patientform = NewPatient()
+    newappid = request.GET.get('name', '')
+    title = request.GET.get('title', '')
+    phonenumber=request.GET.get('phonenumber', '')
+
+    newappvariables ={'firstname':title,'phonenumber':phonenumber}
+    print(newappvariables)
+    patientform = NewPatient(initial=newappvariables)
     today = date.today()
     doctors = User.objects.filter(groups__name='doctor')
     checkedin_count = CheckedinPatient.objects.filter(checkedintime__year=today.year, checkedintime__month=today.month,
@@ -23,14 +28,20 @@ def newpatient(request):
                                                                        start__day=today.day).count()
     appointment_count = int(newappounmentcount) + int(existingappcount)
     countries = CountryList.objects.all().values('id','name')
+    checkedinpatient = CheckedinPatient.objects.filter(checkedintime__year=today.year, checkedintime__month=today.month,
+                                                       checkedintime__day=today.day). \
+        annotate(duration=ExpressionWrapper(Value(datetime.now(), output_field=DateTimeField()) - F('checkedintime'),
+                                            output_field=DurationField())). \
+        values('checkedintime', 'title__firstname', 'title__lastname', 'duration')
 
     context = {'form': patientform,'doctors':doctors,'checkin': checkedin_count, 'appointment': appointment_count,
-               'countries':countries
+               'countries':countries,'newappid':newappid,'checkedinpatient':checkedinpatient
                }
     return render(request, 'receptionactivities/newpatientregistration.html', context)
 
 def createnewpatient(request):
-    dob = datetime.datetime(int(request.POST.get('year')),int(request.POST.get('month')),int(request.POST.get('day')))
+    dob = datetime(int(request.POST.get('year')),int(request.POST.get('month')),int(request.POST.get('day')))
+
     try:
         if request.POST.get('postcode') == '':
             postcode = 0
@@ -58,11 +69,15 @@ def createnewpatient(request):
         patient_id = p.id
         status='true'
         errmsg=''
+        eventid=request.POST.get('appid')
+        if eventid.startswith('N'):
+            p = NewPatientAppointmentevents.objects.filter(id=eventid[2:])
+            p.update(patient_id=patient_id, isregistered=True)
     except Exception as e:
         patient_id = 0
         status = 'false'
         errmsg = str(e)
-    data = {'status':status,'errmsg':errmsg,'patid':patient_id}
+    data = {'status':status,'errmsg':errmsg,'patid':patient_id,'appid':eventid}
     return JsonResponse(data)
 
 def getstate(request):
@@ -103,17 +118,19 @@ def appointment(request):
             )
             p.save()
     existing_patientevents = ExistingPatientAppointmentevents.objects.all() \
-        .annotate(eventid=Concat(Value('E-'), 'id', output_field=CharField())) \
-        .values('eventid', 'title__firstname', 'title__phonenumber', 'start', 'end', 'doctor__username','title__lastname'
-                ,'title__addressline1','title__location','title__city'
-                )
+        .annotate(eventid=Concat(Value('E-'), 'id', output_field=CharField())).extra(select={'isregistered':'0'}) \
+        .values('eventid', 'title__firstname', 'title__phonenumber', 'start', 'end', 'doctor__username','ischeckedin','title__lastname'
+                ,'title__addressline1','title__location','title__city','isregistered')
     new_patientevents = NewPatientAppointmentevents.objects.all() \
         .annotate(lastname=Value('', CharField()), \
                   city=Value('', CharField()),location=Value('', CharField()),addressline1=Value('', CharField()),eventid=Concat(Value('N-'), 'id', output_field=CharField())) \
-        .values('eventid', 'title', 'phonenumber', 'start', 'end', 'doctor__username','lastname','addressline1','location','city')
+        .values('isregistered','eventid', 'title', 'phonenumber', 'start', 'end', 'doctor__username','ischeckedin','lastname','addressline1','location','city')
+    print(existing_patientevents)
+    print(new_patientevents)
     events = existing_patientevents.union(new_patientevents)
     doctors = User.objects.filter(groups__name='doctor')
     today = date.today()
+    print()
     checkedin_count = CheckedinPatient.objects.filter(checkedintime__year=today.year, checkedintime__month=today.month,
                                                       checkedintime__day=today.day).count()
     newappounmentcount = NewPatientAppointmentevents.objects.filter(start__year=today.year, start__month=today.month,
@@ -122,7 +139,13 @@ def appointment(request):
                                                                        start__day=today.day).count()
     appointment_count = int(newappounmentcount) + int(existingappcount)
 
-    context = {'eventdata': events, 'doctors': doctors,'checkin': checkedin_count, 'appointment': appointment_count}
+    checkedinpatient = CheckedinPatient.objects.filter(checkedintime__year=today.year, checkedintime__month=today.month,
+                                                      checkedintime__day=today.day).\
+        annotate(duration = ExpressionWrapper( Value(datetime.now(),output_field= DateTimeField())-F('checkedintime'),output_field= DurationField() )).\
+                 values('checkedintime','title__firstname','title__lastname','duration')
+
+
+    context = {'eventdata': events, 'doctors': doctors,'checkin': checkedin_count, 'appointment': appointment_count,'checkedinpatient':checkedinpatient}
     return render(request, 'receptionactivities/appointment.html', context)
 
 

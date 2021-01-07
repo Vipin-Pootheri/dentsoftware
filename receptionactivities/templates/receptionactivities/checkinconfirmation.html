@@ -13,6 +13,12 @@
 
               <p><span>The patient is registered sucessfully. Registration No :</span> <span id="regno"></span></p>
               <p>Do you want to checkin this patient</p>
+              <select id='appcheckin' class="form-control">
+                  {% for doctor in doctors %}
+                  <option value="{{doctor.id}}">{{doctor.username}}</option>
+                  {% endfor %}
+
+              </select>
 
           </div>
       </div>

@@ -5,14 +5,55 @@
             <a href="{% url 'appointment' %}"> <button class="btn mr-1" style="width:200 px;height: 40px ">Appointment</button></a>
         </ul>
     </div>
-    <div class="mr-2">
-        <span class="counter-count">{{checkin}}</span>
+    <div class="mr-2" id = "checkincounter">
+        <span  class="counter-count">{{checkin}}</span>
         <br>
         <span class="ml-3 mt-0" style="color:white ;font-size:10px">CheckIn</span>
     </div>
     <div>
-        <span class="counter-count">{{appointment}} </span>
+        <span id = "appointmentcounter" class="counter-count">{{appointment}} </span>
         <br>
         <span class="ml-2" style="color:white;font-size:10px">Appointment</span>
     </div>
 </nav>
+
+<div class="modal fade" id="modalwaitingtime" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header border-0">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+      <div class="modal-body">
+          <div class="card border-0">
+            <table id = "waitingtimetable" class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">Sl.No</th>
+                  <th scope="col">PatientName </th>
+                  <th scope="col">Patient Type</th>
+                  <th scope="col">Appointment Time</th>
+                  <th scope="col">Waiting time</th>
+                   <th scope="col">Doctor</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for patient in checkedinpatient %}
+                <tr>
+                    <td>1</td>
+                    <td>{{patient.title__firstname}}</td>
+                    <td></td>
+                    <td>{{patient.duration}}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

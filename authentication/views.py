@@ -25,6 +25,11 @@ def loginpage(request):
     return render(request, 'authentication/loginpage.html', context)
 
 def logout_view(request):
+    if 'firstname' in request.session:
+        del request.session['patid']
+        del request.session['firstname']
+        del request.session['phonenumber']
+        del request.session['location']
     logout(request)
     loginform = LoginForm()
     return redirect('loginpage')

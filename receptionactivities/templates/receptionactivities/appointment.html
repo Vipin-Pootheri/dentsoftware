@@ -185,7 +185,9 @@
                                 'phonenumber':'{{event.title__phonenumber}}',
                                 'addressline1':'{{event.title__addressline1}}',
                                 'location':'{{event.title__location}}',
-                                'city':'{{event.title__city}}'
+                                'city':'{{event.title__city}}',
+                                'isregistered':'{{event.isregistered}}',
+                                'ischeckedin':'{{event.ischeckedin}}'
                                 }
                         },
                     {% endfor %}
@@ -248,10 +250,24 @@
                  $('#updatephonenumber').text(calEvent.extendedProps['phonenumber'])
              }
             if (calEvent.id.indexOf('E') == 0){
+                $('#checkin').removeAttr("disabled");
                 $('#checkin').text('Check In')
+                if(calEvent.extendedProps['ischeckedin'] == 'True') {
+                    $('#checkin').prop('disabled', true);
+                }else{
+                    $('#checkin').removeAttr("disabled");
+                }
 
             }else{
-                $('#checkin').text('Register')
+                if(calEvent.extendedProps['isregistered'] == '1') {
+                    $('#checkin').text('Register')
+                    $('#checkin').prop('disabled', true);
+                }
+                else{
+                    $('#checkin').text('Register')
+                    $('#checkin').removeAttr("disabled");
+                }
+
             }
 
             $('#modalupdateappointment').modal('show')

@@ -77,6 +77,7 @@ class NewPatientAppointmentevents(models.Model):
     doctor = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     ischeckedin = models.BooleanField(null=True)
     isregistered = models.BooleanField(null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.SET_NULL, null=True)
 
 
 class CheckedinPatient(models.Model):
@@ -85,6 +86,8 @@ class CheckedinPatient(models.Model):
     doctor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     checkouttime = models.DateTimeField(null=True)
     status = models.BooleanField(null=True)
+
+
 
 class CountryList(models.Model):
     sortname=models.CharField(max_length=10,null=True)

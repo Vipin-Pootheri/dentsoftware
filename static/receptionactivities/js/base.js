@@ -70,9 +70,8 @@ $(document).ready(function(){
         },
         success: function (data) {
 
-            window.location.href=data['url']+'/reception/newpatient/'
-            $('#firstname').val(data['title'])
-            $('#phonenumber').val(data['phonenumber'])
+            window.location.href=data['url']+'/reception/newpatient/?name='+ $('#updateappointmentid').val() + '&title='+ data['title']+'&phonenumber='+  data['phonenumber']
+
         }
         })
 
@@ -171,6 +170,11 @@ function csrfSafeMethod(method) {
     $('#patientsubmit').on('click',function(){
 
         var status=0
+        var appid=''
+        if ($('#newappid').val() != ''){
+            appid=$('#newappid').val()
+        }
+
         if ($('#firstname').val() == ''){
             alert('Please fill first name field')
             status=1
@@ -224,11 +228,13 @@ function csrfSafeMethod(method) {
              country: $('#country').val(),
              postcode: $('#postcode').val(),
              state: $('#state').val(),
-             city: $('#city').val()
+             city: $('#city').val(),
+             appid:appid
          },
         success: function (data) {
                 if (data['status'] == 'true') {
                     $('#regno').text(data['patid'])
+                    $('#regno').attr('name', appid);
                     $('#modalconfirmcheckin').modal('show');
                 }
                 else{
@@ -244,13 +250,16 @@ function csrfSafeMethod(method) {
     $('#confirmcheckin').on('click',function(){
 
         $.ajax({
-         url: '/home/setpatient/',
+         url: '/home/appointmentcheckin/',
          data: {
-            patid: $('#regno').text()
+            patid: $('#regno').text(),
+            appid: $('#regno').attr('name'),
+            doctorid:$('#appcheckin').val()
             },
          success: function (data) {
               $('#modalconfirmcheckin').modal('hide');
-              $('#modalcheckin').modal('show');
+              alert('User checked in sucessfully')
+
 
          }
          })
@@ -300,6 +309,11 @@ function csrfSafeMethod(method) {
         else{
             alert('plese select a patiemt to check in')
         }
+    })
+
+    $('#checkincounter').on('click',function(){
+
+        $('#modalwaitingtime').modal('show')
     })
 
 })

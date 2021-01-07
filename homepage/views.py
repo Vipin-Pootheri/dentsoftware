@@ -49,7 +49,21 @@ def checkinwalkin(request):
     patid = request.session['patid']
     doctorid = request.GET.get('doctorid')
     ischeckedin = CheckedinPatient.objects.filter(title_id=patid, doctor_id=doctorid, status=None)
-    print(ischeckedin)
+
+    if ischeckedin.exists():
+        pass
+    else:
+        q = CheckedinPatient(title_id=patid, doctor_id=doctorid)
+        q.save()
+    data = {'status': 'true'}
+    return JsonResponse(data)
+def appointmentcheckin(request):
+    patid = request.GET.get('patid')
+    doctorid = request.GET.get('doctorid')
+    appid=request.GET.get('appid')
+    ischeckedin = CheckedinPatient.objects.filter(title_id=patid, doctor_id=doctorid, status=None)
+    p=NewPatientAppointmentevents.objects.filter(id=appid[2:])
+    p.update(ischeckedin=True)
     if ischeckedin.exists():
         pass
     else:
@@ -60,11 +74,13 @@ def checkinwalkin(request):
 
 def setpatient(request):
     patid = request.GET.get('patid')
+
     print('set the session key')
     request.session['patid'] = patid
     patient=Patient.objects.filter(id=patid).values('firstname','phonenumber','location').get()
     request.session['firstname'] = patient['firstname']
     request.session['phonenumber'] = patient['phonenumber']
     request.session['location'] = patient['location']
+
     data = {'status':'true'}
     return JsonResponse(data)

@@ -2,20 +2,21 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.contrib.auth.models import User, Group
 from django.db.models.functions import Concat
-from django.db.models import Value, CharField,F,ExpressionWrapper,DateTimeField,DurationField
+from django.db.models import Value, CharField, F, ExpressionWrapper, DateTimeField, DurationField
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date,datetime
+from datetime import date, datetime
 from .forms import NewPatient
-from .models import Patient, ExistingPatientAppointmentevents, NewPatientAppointmentevents,CheckedinPatient,CountryList,StateList
+from .models import Patient, ExistingPatientAppointmentevents, NewPatientAppointmentevents, CheckedinPatient, \
+    CountryList, StateList
 
 
 # Create your views here.
 def newpatient(request):
     newappid = request.GET.get('name', '')
     title = request.GET.get('title', '')
-    phonenumber=request.GET.get('phonenumber', '')
+    phonenumber = request.GET.get('phonenumber', '')
 
-    newappvariables ={'firstname':title,'phonenumber':phonenumber}
+    newappvariables = {'firstname': title, 'phonenumber': phonenumber}
     print(newappvariables)
     patientform = NewPatient(initial=newappvariables)
     today = date.today()
@@ -27,20 +28,21 @@ def newpatient(request):
     existingappcount = ExistingPatientAppointmentevents.objects.filter(start__year=today.year, start__month=today.month,
                                                                        start__day=today.day).count()
     appointment_count = int(newappounmentcount) + int(existingappcount)
-    countries = CountryList.objects.all().values('id','name')
+    countries = CountryList.objects.all().values('id', 'name')
     checkedinpatient = CheckedinPatient.objects.filter(checkedintime__year=today.year, checkedintime__month=today.month,
                                                        checkedintime__day=today.day). \
         annotate(duration=ExpressionWrapper(Value(datetime.now(), output_field=DateTimeField()) - F('checkedintime'),
                                             output_field=DurationField())). \
         values('checkedintime', 'title__firstname', 'title__lastname', 'duration')
 
-    context = {'form': patientform,'doctors':doctors,'checkin': checkedin_count, 'appointment': appointment_count,
-               'countries':countries,'newappid':newappid,'checkedinpatient':checkedinpatient
+    context = {'form': patientform, 'doctors': doctors, 'checkin': checkedin_count, 'appointment': appointment_count,
+               'countries': countries, 'newappid': newappid, 'checkedinpatient': checkedinpatient
                }
     return render(request, 'receptionactivities/newpatientregistration.html', context)
 
+
 def createnewpatient(request):
-    dob = datetime(int(request.POST.get('year')),int(request.POST.get('month')),int(request.POST.get('day')))
+    dob = datetime(int(request.POST.get('year')), int(request.POST.get('month')), int(request.POST.get('day')))
 
     try:
         if request.POST.get('postcode') == '':
@@ -64,12 +66,12 @@ def createnewpatient(request):
             postcode=postcode,
             state=request.POST.get('state'),
             city=request.POST.get('city')
-            )
+        )
         p.save()
         patient_id = p.id
-        status='true'
-        errmsg=''
-        eventid=request.POST.get('appid')
+        status = 'true'
+        errmsg = ''
+        eventid = request.POST.get('appid')
         if eventid.startswith('N'):
             p = NewPatientAppointmentevents.objects.filter(id=eventid[2:])
             p.update(patient_id=patient_id, isregistered=True)
@@ -77,17 +79,19 @@ def createnewpatient(request):
         patient_id = 0
         status = 'false'
         errmsg = str(e)
-    data = {'status':status,'errmsg':errmsg,'patid':patient_id,'appid':eventid}
+    data = {'status': status, 'errmsg': errmsg, 'patid': patient_id, 'appid': eventid}
     return JsonResponse(data)
+
 
 def getstate(request):
     try:
         country = request.GET.get('country')
-        states = list(StateList.objects.filter(country_id=country).values('id','name'))
-        data={'status':'true','states':states}
+        states = list(StateList.objects.filter(country_id=country).values('id', 'name'))
+        data = {'status': 'true', 'states': states}
     except Exception as e:
         data = {'status': 'false', 'errmsg': str(e)}
     return JsonResponse(data)
+
 
 def appointment(request):
     if request.method == 'POST':
@@ -118,13 +122,16 @@ def appointment(request):
             )
             p.save()
     existing_patientevents = ExistingPatientAppointmentevents.objects.all() \
-        .annotate(eventid=Concat(Value('E-'), 'id', output_field=CharField())).extra(select={'isregistered':'0'}) \
-        .values('eventid', 'title__firstname', 'title__phonenumber', 'start', 'end', 'doctor__username','ischeckedin','title__lastname'
-                ,'title__addressline1','title__location','title__city','isregistered')
+        .annotate(eventid=Concat(Value('E-'), 'id', output_field=CharField())).extra(select={'isregistered': '0'}) \
+        .values('eventid', 'title__firstname', 'title__phonenumber', 'start', 'end', 'doctor__username', 'ischeckedin',
+                'title__lastname'
+                , 'title__addressline1', 'title__location', 'title__city', 'isregistered')
     new_patientevents = NewPatientAppointmentevents.objects.all() \
         .annotate(lastname=Value('', CharField()), \
-                  city=Value('', CharField()),location=Value('', CharField()),addressline1=Value('', CharField()),eventid=Concat(Value('N-'), 'id', output_field=CharField())) \
-        .values('isregistered','eventid', 'title', 'phonenumber', 'start', 'end', 'doctor__username','ischeckedin','lastname','addressline1','location','city')
+                  city=Value('', CharField()), location=Value('', CharField()), addressline1=Value('', CharField()),
+                  eventid=Concat(Value('N-'), 'id', output_field=CharField())) \
+        .values('isregistered', 'eventid', 'title', 'phonenumber', 'start', 'end', 'doctor__username', 'ischeckedin',
+                'lastname', 'addressline1', 'location', 'city')
     print(existing_patientevents)
     print(new_patientevents)
     events = existing_patientevents.union(new_patientevents)
@@ -140,12 +147,13 @@ def appointment(request):
     appointment_count = int(newappounmentcount) + int(existingappcount)
 
     checkedinpatient = CheckedinPatient.objects.filter(checkedintime__year=today.year, checkedintime__month=today.month,
-                                                      checkedintime__day=today.day).\
-        annotate(duration = ExpressionWrapper( Value(datetime.now(),output_field= DateTimeField())-F('checkedintime'),output_field= DurationField() )).\
-                 values('checkedintime','title__firstname','title__lastname','duration')
+                                                       checkedintime__day=today.day). \
+        annotate(duration=ExpressionWrapper(Value(datetime.now(), output_field=DateTimeField()) - F('checkedintime'),
+                                            output_field=DurationField())). \
+        values('checkedintime', 'title__firstname', 'title__lastname', 'duration')
 
-
-    context = {'eventdata': events, 'doctors': doctors,'checkin': checkedin_count, 'appointment': appointment_count,'checkedinpatient':checkedinpatient}
+    context = {'eventdata': events, 'doctors': doctors, 'checkin': checkedin_count, 'appointment': appointment_count,
+               'checkedinpatient': checkedinpatient}
     return render(request, 'receptionactivities/appointment.html', context)
 
 
@@ -163,24 +171,28 @@ def draganddrop(request):
         p.update(start=eventstart, end=eventend)
     return redirect('appointment')
 
+
 def checkin(request):
     patid = request.GET.get('id')
     print(patid[2:])
     p = ExistingPatientAppointmentevents.objects.filter(id=patid[2:])
     if p.exists():
         p.update(ischeckedin=True)
-    ischeckedin = CheckedinPatient.objects.filter(title_id = p.values('title_id','doctor_id').get()['title_id'],doctor_id=p.values('title_id','doctor_id').get()['doctor_id'],status=None)
+    ischeckedin = CheckedinPatient.objects.filter(title_id=p.values('title_id', 'doctor_id').get()['title_id'],
+                                                  doctor_id=p.values('title_id', 'doctor_id').get()['doctor_id'],
+                                                  status=None)
     print(p)
     if ischeckedin.exists():
 
         pass
     else:
-        q=CheckedinPatient(title_id = p.values('title_id','doctor_id').get()['title_id'],doctor_id=p.values('title_id','doctor_id').get()['doctor_id'])
+        q = CheckedinPatient(title_id=p.values('title_id', 'doctor_id').get()['title_id'],
+                             doctor_id=p.values('title_id', 'doctor_id').get()['doctor_id'])
         q.save()
 
-
-    data={'status':'true'}
+    data = {'status': 'true', 'url': request.scheme + "://" + request.get_host()+'/home/'}
     return JsonResponse(data)
+
 
 def delete(request):
     eventid = request.GET.get('id')
@@ -192,6 +204,7 @@ def delete(request):
         p.delete()
     data = {'status': 'true'}
     return JsonResponse(data)
+
 
 def update(request):
     eventid = request.GET.get('id')
@@ -215,12 +228,27 @@ def update(request):
 
     return redirect('appointment')
 
+
 def registerafterappointment(request):
     eventid = request.GET.get('id')
-    p = NewPatientAppointmentevents.objects.filter(id=eventid[2:]).values('title','phonenumber').get()
+    p = NewPatientAppointmentevents.objects.filter(id=eventid[2:]).values('title', 'phonenumber').get()
 
-    data ={'url':request.scheme + "://" +request.get_host(), 'title':p['title'],'phonenumber':p['phonenumber'],"eventid":eventid }
+    data = {'url': request.scheme + "://" + request.get_host(), 'title': p['title'], 'phonenumber': p['phonenumber'],
+            "eventid": eventid}
     print(data)
     return JsonResponse(data)
 
 
+def hasusercheckedin(request):
+    patid = request.GET.get('pat_id')
+    today = date.today()
+    p = CheckedinPatient.objects.filter(title_id=patid, checkedintime__year=today.year,
+                                        checkedintime__month=today.month,
+                                        checkedintime__day=today.day)
+    data = {}
+    if p.exists():
+        data['status'] = 'True'
+    else:
+        data['status'] = 'False'
+
+    return JsonResponse(data)

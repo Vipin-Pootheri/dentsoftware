@@ -83,9 +83,11 @@ $(document).ready(function(){
         },
         success: function (data) {
             if(data['status'] == 'true'){
+            alert(data['url'])
             alert("User checked in sucessfully")
              $('#modalupdateappointment').modal('hide')
-             window.location = window.location.href
+
+             window.location = data['url']
 
             }
             else{
@@ -259,7 +261,7 @@ function csrfSafeMethod(method) {
          success: function (data) {
               $('#modalconfirmcheckin').modal('hide');
               alert('User checked in sucessfully')
-
+              window.location = data['url']
 
          }
          })
@@ -270,7 +272,25 @@ function csrfSafeMethod(method) {
 
     $('#sidepanelcheckin').on("click",function(){
         if ($('div[name="userprofcard"]').length){
-              $('#modalcheckin').modal('show')
+              $.ajax({
+                url: '/reception/hasusercheckedin/',
+                data: {
+                    'patid': $('div[name="userprofcard"]').attr('id'),
+
+                    },
+                success: function (data) {
+                    if (data['status'] == 'True') {
+                        alert('This user is already checked in ')
+                    }
+                    else{
+                          $('#modalcheckin').modal('show')
+                    }
+                }
+              })
+
+
+
+
         }
         else{
             alert('plese select a patiemt to check in')

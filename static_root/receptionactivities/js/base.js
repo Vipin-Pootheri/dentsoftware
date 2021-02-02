@@ -276,7 +276,7 @@ function csrfSafeMethod(method) {
             if(data['status'] == 'true'){
             alert("User checked in sucessfully")
              $('#modalcheckin').modal('hide')
-            window.location = window.location.href;
+            window.location = data['url']
 
             }
             else{

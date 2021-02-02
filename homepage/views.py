@@ -69,7 +69,7 @@ def appointmentcheckin(request):
     else:
         q = CheckedinPatient(title_id=patid, doctor_id=doctorid)
         q.save()
-    data = {'status': 'true'}
+    data = {'status': 'true','url': request.scheme + "://" + request.get_host()+'/home/'}
     return JsonResponse(data)
 
 def setpatient(request):

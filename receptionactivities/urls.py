@@ -14,6 +14,7 @@ urlpatterns = [
     path('appointment/delete', views.delete, name='delete'),
     path('appointment/update', views.update, name='update'),
     path('appointment/registerafterappointment', views.registerafterappointment, name='registerafterappointment'),
+    path('hasusercheckedin/', views.hasusercheckedin, name='hasusercheckedin'),
 
 
 
